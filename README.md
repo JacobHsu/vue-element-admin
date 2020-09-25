@@ -1,5 +1,10 @@
 # vue-element-admin
 
+[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)
+
+vue create cli
+`"core-js": "^2.6.5",`
+
 ## Project setup
 ```
 yarn install
