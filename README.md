@@ -156,6 +156,8 @@ $sideBarWidth: 210px;
 
 src\store\modules\permission.js
 
+> 提供 permission_routes 值
+
 ```js
 // constantRoutes 與 asyncRoutes 決定 sidebar-item 內容
 import { asyncRoutes, constantRoutes } from '@/router'
@@ -166,6 +168,32 @@ const mutations = {
     state.routes = constantRoutes.concat(routes) // constantRoutes 在前 asyncRoutes 在後
   }
 }
+
+// 當 generateRoutes 被呼叫執行 commit('SET_ROUTES' 寫入 state.routes
+const actions = {
+  generateRoutes({ commit }, roles) {
+    return new Promise(resolve => {
+      let accessedRoutes
+      if (roles.includes('admin')) {
+        accessedRoutes = asyncRoutes || []
+      } else {
+        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+      }
+      commit('SET_ROUTES', accessedRoutes)
+      resolve(accessedRoutes)
+    })
+  }
+}
+
+```
+
+vue-element-admin\src\permission.js
+
+```js
+// 在router執行前 將roles傳給store組accessedRoutes
+router.beforeEach(async(to, from, next) => {
+   // generate accessible routes map based on roles
+          const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
 ```
 
 ## Project setup
